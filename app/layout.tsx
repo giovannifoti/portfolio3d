@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import { Box, Grid3X3, LockKeyhole } from "lucide-react";
 import "./globals.css";
+import BackToTop from "@/components/BackToTop";
 import ThemeToggle from "@/components/ThemeToggle";
 import { siteUrl } from "@/lib/utils";
 
@@ -15,6 +16,14 @@ export const metadata: Metadata = {
     template: "%s | Catalogo Stampa 3D",
   },
   description: "Portfolio moderno e minimalista per prodotti stampati in 3D con schede manuali e render 3D interattivi.",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icon.svg",
+  },
+  alternates: {
+    canonical: "/",
+  },
+  keywords: ["stampa 3D", "catalogo prodotti 3D", "portfolio stampa 3D", "modelli 3MF"],
   openGraph: {
     title: "Catalogo Stampa 3D",
     description: "Prodotti stampati in 3D presentati con schede manuali e render 3D interattivi.",
@@ -22,6 +31,11 @@ export const metadata: Metadata = {
     siteName: "Catalogo Stampa 3D",
     locale: "it_IT",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Catalogo Stampa 3D",
+    description: "Prodotti stampati in 3D presentati con schede manuali e render 3D interattivi.",
   },
 };
 
@@ -73,6 +87,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <span>Render 3D interattivi e schede prodotto manuali.</span>
             </div>
           </footer>
+          <BackToTop />
         </div>
       </body>
     </html>

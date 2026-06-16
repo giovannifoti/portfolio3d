@@ -1,14 +1,15 @@
 # Catalogo Portfolio Stampa 3D
 
-Web app Next.js semplice per pubblicare un catalogo di prodotti stampati in 3D. L'admin inserisce manualmente titolo, descrizione e categoria, carica il file `.3mf`, e la pagina prodotto mostra il modello con un viewer 3D interattivo.
+Web app Next.js per pubblicare un catalogo professionale di prodotti stampati in 3D. L'admin inserisce manualmente titolo, descrizioni e categoria, carica il file `.3mf`, e il browser genera una copertina dal modello senza usare AI.
 
 ## Stack
 
 - Next.js App Router, React, TypeScript
 - Tailwind CSS per UI responsive dark/light
-- SQLite con `better-sqlite3`
-- Upload locale in `public/uploads`
-- Three.js puro con `ThreeMFLoader` e `OrbitControls`
+- Supabase database + storage in produzione
+- SQLite e upload locale come fallback sviluppo
+- Three.js, React Three Fiber, Drei e `ThreeMFLoader`
+- React Hook Form, Zod, Framer Motion, Lucide
 - Netlify config con `@netlify/plugin-nextjs`
 
 ## Avvio locale
@@ -28,7 +29,7 @@ ADMIN_PASSWORD=change-this-password
 AUTH_SECRET=replace-with-a-long-random-string
 ```
 
-Se non crei il file `.env` in sviluppo, la password fallback e' `admin`. In produzione devi configurare `ADMIN_PASSWORD`.
+Se non crei il file `.env` in sviluppo, la password fallback e' `admin`. In produzione devi configurare `ADMIN_PASSWORD` e `AUTH_SECRET`.
 
 ## Variabili ambiente
 
@@ -36,24 +37,34 @@ Se non crei il file `.env` in sviluppo, la password fallback e' `admin`. In prod
 ADMIN_PASSWORD=change-this-password
 AUTH_SECRET=replace-with-a-long-random-string
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+NEXT_PUBLIC_SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_STORAGE_BUCKET=product-assets
+
 DATABASE_PATH=.data/catalog.sqlite
 UPLOAD_DIR=public/uploads
+MAX_MODEL_UPLOAD_MB=40
+MAX_IMAGE_UPLOAD_MB=8
 ```
+
+Con Supabase configurato, prodotti e file vengono salvati in cloud. Senza Supabase, l'app usa SQLite e `public/uploads` solo per sviluppo locale.
 
 ## Workflow
 
 1. Vai su `/admin`.
 2. Inserisci titolo, descrizione e categoria opzionale.
 3. Carica un file `.3mf`.
-4. Il prodotto appare nel catalogo.
-5. La pagina dettaglio carica il file `.3mf` e lo renderizza in 3D nel browser.
+4. Il browser genera una copertina WebP dal modello.
+5. Il prodotto appare nel catalogo con ricerca, filtri e pulsante WhatsApp.
+6. La pagina dettaglio carica il file `.3mf` e lo renderizza in 3D nel browser.
 
 ## Funzionalita'
 
-- Home minimalista.
-- Catalogo con ricerca e filtro categoria.
+- Home minimalista con sezioni contenuto, prodotti recenti e CTA.
+- Catalogo con ricerca istantanea, filtro categoria, ordinamento e paginazione.
 - Card prodotto con descrizione manuale e pulsante WhatsApp.
-- Pagina dettaglio con viewer 3D interattivo.
+- Pagina dettaglio con viewer 3D interattivo, galleria fullscreen, link copiabile e prodotti correlati.
 - Area admin protetta da password.
 - Creazione, modifica ed eliminazione prodotti.
 - Upload solo `.3mf`.
@@ -61,10 +72,12 @@ UPLOAD_DIR=public/uploads
 - Tema dark/light.
 - Sitemap e robots automatici.
 - Meta tag SEO dinamici per prodotto.
+- Schema.org Product, manifest, favicon SVG, pagina 404 e pagina manutenzione.
+- Rate limiting base su login e upload API.
 
 ## Deploy Netlify
 
-Il file `netlify.toml` e' pronto per build Next.js:
+Il file `netlify.toml` e' pronto per build Next.js e Netlify Functions:
 
 ```bash
 npm run build
@@ -76,9 +89,14 @@ Su Netlify configura almeno:
 ADMIN_PASSWORD=...
 AUTH_SECRET=...
 NEXT_PUBLIC_SITE_URL=https://tuo-dominio.netlify.app
+NEXT_PUBLIC_SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+SUPABASE_STORAGE_BUCKET=product-assets
 ```
 
-Nota produzione: Netlify Functions sono serverless e il filesystem locale non e' uno storage persistente per upload generati dagli utenti. Per un catalogo live usa PostgreSQL gestito e storage cloud per sostituire SQLite e `public/uploads`.
+Prima del deploy esegui lo script `supabase/schema.sql` nel SQL editor di Supabase. Il bucket pubblico predefinito e' `product-assets`.
+
+Nota produzione: Netlify Functions sono serverless e il filesystem locale non e' uno storage persistente per upload generati dagli utenti. Per un catalogo live usa Supabase.
 
 ## Comandi
 
@@ -100,5 +118,6 @@ app/
 components/              UI, viewer 3D, dashboard admin
 lib/                     Auth, DB, storage e query prodotti
 public/uploads/          File `.3mf` caricati
+supabase/schema.sql      Schema database e bucket storage
 types/                   Tipi condivisi
 ```

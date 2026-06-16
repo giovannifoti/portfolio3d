@@ -14,8 +14,8 @@ export default async function CatalogPage({
 }: {
   searchParams: Promise<{ q?: string; category?: string }>;
 }) {
-  const params = await searchParams;
-  const products = await listProducts({ query: params.q, category: params.category });
+  await searchParams;
+  const products = await listProducts();
   const categories = await listCategories();
 
   return (

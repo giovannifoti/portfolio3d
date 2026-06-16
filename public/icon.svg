@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Catalogo Stampa 3D">
+  <rect width="64" height="64" rx="12" fill="#111111"/>
+  <path d="M32 10 50 20.5v21L32 52 14 41.5v-21L32 10Z" fill="#ffffff"/>
+  <path d="M32 10v21m0 21V31m0 0 18-10.5M32 31 14 20.5" fill="none" stroke="#111111" stroke-width="4" stroke-linejoin="round"/>
+</svg>
