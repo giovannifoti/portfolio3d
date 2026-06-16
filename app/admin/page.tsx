@@ -12,7 +12,7 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <AdminDashboard initialProducts={listProducts()} />
+      <AdminDashboard initialProducts={await listProducts()} />
     </main>
   );
 }

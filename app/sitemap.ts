@@ -4,9 +4,9 @@ import { siteUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl();
-  const products = listProducts();
+  const products = await listProducts();
 
   return [
     {

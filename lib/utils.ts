@@ -40,3 +40,12 @@ export function parseJsonArray(value: string | null | undefined): string[] {
     return [];
   }
 }
+
+export function sanitizeText(value: string, maxLength = 5000) {
+  return value
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+    .slice(0, maxLength);
+}
